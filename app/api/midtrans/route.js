@@ -1,3 +1,5 @@
+export const runtime = "nodejs";
+
 import Midtrans from "midtrans-client";
 import { NextResponse } from "next/server";
 
@@ -12,7 +14,6 @@ export async function POST(request) {
     const body = await request.json();
     const { id, productName, price, quantity } = body;
 
-    // Basic validation
     if (!id || !productName || !price || !quantity) {
       return NextResponse.json(
         { error: "Invalid request payload" },
@@ -29,7 +30,7 @@ export async function POST(request) {
       },
       item_details: [
         {
-          id: id,
+          id,
           name: productName,
           price: parseInt(price),
           quantity: parseInt(quantity),
@@ -43,11 +44,9 @@ export async function POST(request) {
 
     const snapToken = await snap.createTransactionToken(parameter);
 
-    return NextResponse.json({
-      snap_token: snapToken,
-    });
+    return NextResponse.json({ snap_token: snapToken });
   } catch (error) {
-    console.error("Midtrans error:", error);
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to create transaction" },
       { status: 500 }
