@@ -1,7 +1,7 @@
 import Midtrans from "midtrans-client";
 
 const snap = new Midtrans.Snap({
-  isProduction: false,
+  isProduction: false, // SANDBOX
   serverKey: process.env.MIDTRANS_SERVER_KEY,
 });
 
@@ -38,9 +38,11 @@ export default async function handler(req, res) {
 
     const snapToken = await snap.createTransactionToken(parameter);
 
-    return res.status(200).json({ snap_token: snapToken });
+    return res.status(200).json({
+      snap_token: snapToken,
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Midtrans error:", error);
     return res.status(500).json({ error: "Midtrans error" });
   }
 }
